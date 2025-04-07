@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DepartmentController;
 
 Route::get('/', function () {
@@ -19,11 +20,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
-    Route::get('/documents', function () {
-        return Inertia::render('documents');
-    })->name('documents');
+    Route::get('/documents', [DocumentController::class, 'index'])->name('documents');
 
-
+    Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
     Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 

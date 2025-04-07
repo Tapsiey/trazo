@@ -68,3 +68,19 @@ export interface UserResponse extends User {
     permissions: Permission[];
     department: Department | null;
 }
+
+export interface Document {
+    id: number;
+    title: string;
+    description: string | null;
+    file_path: string;
+    file_name: string;
+    file_type: string;
+    file_size: number;
+    category: string;
+    uploaded_by: number;
+    department_id: number | null;
+    created_at: string;
+    updated_at: string;
+    file_url?: string; // optional, added in response
+}
