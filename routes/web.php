@@ -2,6 +2,8 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartmentController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -15,18 +17,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('/departments', function () {
-        return Inertia::render('departments');
-    })->name('departments');
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
     Route::get('/documents', function () {
         return Inertia::render('documents');
     })->name('documents');
 
 
-    Route::get('/users', function () {
-        return Inertia::render('users');
-    })->name('users');
+    Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 
 require __DIR__ . '/settings.php';

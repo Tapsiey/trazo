@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use Inertia\Response;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,18 +16,19 @@ class DepartmentController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware('permission:view-departments', only: ['index', 'show']),
+            new Middleware('role:admin', only: ['index', 'show']),
             new Middleware('permission:create-departments', only: ['store']),
             new Middleware('permission:edit-departments', only: ['update']),
             new Middleware('permission:delete-departments', only: ['destroy']),
         ];
     }
 
-    public function index()
+    public function index(Request $request): Response
     {
         $departments = Department::all();
-
-        return response()->json([$departments]);
+        return Inertia::render('departments', [
+            'departments' => $departments,
+        ]);
     }
 
     public function store(Request $request)

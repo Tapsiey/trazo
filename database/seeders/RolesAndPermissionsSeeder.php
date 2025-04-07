@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +31,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $uploadDocument = Permission::create(['name' => 'upload-documents']);
 
 
-        $admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo([
+            $createDocument,
+            $editDocument,
+            $viewDocument,
+            $uploadDocument,
+            $deleteDocument
+        ]);
+
         $editor->givePermissionTo([
             $createDocument,
             $editDocument,
@@ -51,6 +58,27 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'Mutsawashe Dupwa',
             'email' => 'h210154y@hit.ac.zw',
             'password' => Hash::make('Mutsawashe'),
+        ]);
+
+
+        Department::create([
+            'name' => 'Quality Assurance Junior School',
+            'code' => 'QAJS',
+        ]);
+
+        Department::create([
+            'name' => 'Quality Assurance Secondary and Non Formal Education',
+            'code' => 'QASNFE',
+        ]);
+
+        Department::create([
+            'name' => 'Quality Assurance Infant School',
+            'code' => 'QAIS',
+        ]);
+
+        Department::create([
+            'name' => 'Curriculum Development and Technical Services',
+            'code' => 'CDTS',
         ]);
 
         $superAdmin->assignRole('admin');

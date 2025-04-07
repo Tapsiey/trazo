@@ -41,3 +41,30 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+interface Department {
+    name: string;
+    id: number;
+    code: string;
+    description?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+interface Role {
+    id: number;
+    name: string;
+    guard_name: string;
+}
+
+interface Permission {
+    id: number;
+    name: string;
+    guard_name: string;
+}
+
+export interface UserResponse extends User {
+    roles: Role[];
+    permissions: Permission[];
+    department: Department | null;
+}
