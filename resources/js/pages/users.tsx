@@ -5,6 +5,10 @@ import { capitalize, formatShortDate } from '@/lib/utils';
 import { UserResponse, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { Plus, UserPlus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,10 +35,7 @@ export default function Department() {
                                 <Plus />
                                 New Role
                             </Button>
-                            <Button>
-                                <UserPlus />
-                                Create
-                            </Button>
+                            <CreateUserFrm />
                         </div>
                     </div>
                 </div>
@@ -63,5 +64,62 @@ export default function Department() {
                 </div>
             </div>
         </AppLayout>
+    );
+}
+
+function CreateUserFrm() {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button>
+                    <UserPlus />
+                    Create
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Create User</DialogTitle>
+                    <DialogDescription>
+                        Only create users with elevated privileges from here. For all other users, use the registration page
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                            Name
+                        </Label>
+                        <Input id="name" name="name" className="col-span-3" required />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                            Email
+                        </Label>
+                        <Input id="email" name="email" type="email" className="col-span-3" required />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                            Role
+                        </Label>
+                        <Select>
+                            <SelectTrigger className="block w-full">
+                                <SelectValue placeholder="Select a fruit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                            Department
+                        </Label>
+                        <Input id="email" name="email" type="email" className="col-span-3" required />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button type="submit">Save changes</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

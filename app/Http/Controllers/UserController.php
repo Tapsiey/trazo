@@ -14,4 +14,12 @@ class UserController extends Controller
         $users = User::with(['roles', 'permissions', 'department'])->get();
         return Inertia::render('users', ['users' => $users]);
     }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }
