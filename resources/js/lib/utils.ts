@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
+import { CheckCircle, Circle, CircleOff, HelpCircle, Timer } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -19,3 +20,31 @@ export function capitalize(word: string) {
     if (!word) return '';
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
+
+export const statuses = [
+    {
+        value: 'backlog',
+        label: 'Backlog',
+        icon: HelpCircle,
+    },
+    {
+        value: 'todo',
+        label: 'Todo',
+        icon: Circle,
+    },
+    {
+        value: 'submitted',
+        label: 'In Progress',
+        icon: Timer,
+    },
+    {
+        value: 'done',
+        label: 'Done',
+        icon: CheckCircle,
+    },
+    {
+        value: 'canceled',
+        label: 'Canceled',
+        icon: CircleOff,
+    },
+];

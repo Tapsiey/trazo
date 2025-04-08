@@ -78,6 +78,7 @@ export interface Document {
     file_type: string;
     file_size: number;
     category: string;
+    status: string;
     uploaded_by: number;
     department_id: number | null;
     created_at: string;

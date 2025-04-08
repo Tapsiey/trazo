@@ -1,13 +1,22 @@
 import { DataTable } from '@/components/DataTable/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
-import { formatShortDate } from '@/lib/utils';
+import { formatShortDate, statuses } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -41,6 +50,22 @@ const columns: ColumnDef<Document>[] = [
         header: 'Submited By',
         //@ts-expect-error
         cell: ({ row }) => row.original.uploader.name,
+    },
+    {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => {
+            const status = statuses.find((status) => status.value === row.getValue('status'));
+            if (!status) {
+                return null;
+            }
+            return (
+                <div className="flex w-[100px] items-center">
+                    {status.icon && <status.icon className="text-muted-foreground mr-2 h-4 w-4" />}
+                    <span>{status.label}</span>
+                </div>
+            );
+        },
     },
     {
         accessorKey: 'updated_at',
@@ -107,7 +132,7 @@ export default function Documents() {
 }
 
 function UploadDocumentFrm() {
-    const { data, setData, post, progress, processing, errors } = useForm({
+    const { data, setData, post, processing } = useForm({
         title: '',
         description: '',
         file: null as File | null,
@@ -172,9 +197,11 @@ function UploadDocumentFrm() {
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button disabled={processing} type="submit">
-                            {processing ? 'Uploading...' : 'Upload Document'}
-                        </Button>
+                        <DialogClose>
+                            <Button disabled={processing} type="submit">
+                                {processing ? 'Uploading...' : 'Upload Document'}
+                            </Button>
+                        </DialogClose>
                     </DialogFooter>
                 </form>
             </DialogContent>
