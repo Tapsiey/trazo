@@ -16,7 +16,7 @@ class DocumentController extends Controller
         $user = $request->user();
 
         if ($user->hasRole('admin')) {
-            $documents = Document::all();
+            $documents = Document::with('uploader')->get();
         } else {
             $documents = Document::where('uploaded_by', $user->id)
                 ->orWhere('department_id', $user->department_id)

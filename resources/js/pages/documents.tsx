@@ -1,24 +1,74 @@
 import { DataTable } from '@/components/DataTable/data-table';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { formatShortDate } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { FilePlus2 } from 'lucide-react';
+import { FilePlus2, MoreHorizontal } from 'lucide-react';
 import { type FormEvent } from 'react';
 
 const columns: ColumnDef<Document>[] = [
     {
         accessorKey: 'title',
         header: 'Title',
+        cell: ({ row }) => (
+            <Link href="/" className="text-blue-500">
+                {row.original.title}
+            </Link>
+        ),
     },
     {
         accessorKey: 'file_size',
         header: 'Size',
+        //@ts-expect-error
+        cell: ({ row }) => <span>{parseFloat(row.original.file_size / 1024).toFixed(2)} KB</span>,
+    },
+    {
+        accessorKey: 'category',
+        header: 'Category',
+        //@ts-expect-error
+        cell: ({ row }) => <Badge>{row.original.category.toLowerCase()}</Badge>,
+    },
+    {
+        accessorKey: 'uploader',
+        header: 'Submited By',
+        //@ts-expect-error
+        cell: ({ row }) => row.original.uploader.name,
+    },
+    {
+        accessorKey: 'updated_at',
+        header: 'Last Modified',
+        //@ts-expect-error
+        cell: ({ row }) => formatShortDate(row.original.updated_at),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
+                            <MoreHorizontal />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem>Run Pipeline</DropdownMenuItem>
+                        <DropdownMenuItem>Assign To</DropdownMenuItem>
+                        <DropdownMenuItem>Mark Completed</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
+        },
     },
 ];
 

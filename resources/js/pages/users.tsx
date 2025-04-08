@@ -1,19 +1,71 @@
+import { DataTable } from '@/components/DataTable/data-table';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { capitalize, formatShortDate } from '@/lib/utils';
 import { UserResponse, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Plus, UserPlus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal, Plus, UserPlus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Manager Users',
         href: '/users',
+    },
+];
+
+const columns: ColumnDef<UserResponse>[] = [
+    {
+        accessorKey: 'name',
+        header: 'Name',
+    },
+    {
+        accessorKey: 'email',
+        header: 'Email',
+    },
+    {
+        accessorKey: 'roles',
+        id: 'role',
+        header: 'Role',
+        cell: ({ row }) => capitalize(row.original.roles[0]?.name) ?? 'No role',
+    },
+    {
+        accessorKey: 'department',
+        id: 'dept',
+        header: 'Department',
+        cell: ({ row }) => row.original.department?.name ?? 'N/A',
+    },
+    {
+        accessorKey: 'updated_at',
+        header: 'Last Modified',
+        cell: ({ row }) => formatShortDate(row.original.updated_at),
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
+                            <MoreHorizontal />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem>Export</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
+        },
     },
 ];
 
@@ -41,26 +93,7 @@ export default function Department() {
                 </div>
 
                 <div className="my-8">
-                    <Table>
-                        <TableHeader>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Department</TableHead>
-                            <TableHead className="text-right">Created At</TableHead>
-                        </TableHeader>
-                        <TableBody>
-                            {users.map((user) => (
-                                <TableRow key={user.id}>
-                                    <TableCell>{user.name}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{capitalize(user.roles[0].name)}</TableCell>
-                                    <TableCell>{user.department?.name || 'N/A'}</TableCell>
-                                    <TableCell className="text-right">{formatShortDate(user.created_at)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <DataTable data={users} columns={columns} />
                 </div>
             </div>
         </AppLayout>
