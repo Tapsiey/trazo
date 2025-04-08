@@ -1,15 +1,63 @@
+import { DataTable } from '@/components/DataTable/data-table';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/app-layout';
 import { formatShortDate } from '@/lib/utils';
 import { type BreadcrumbItem, type Department } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal, Plus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Departments',
         href: '/departments',
+    },
+];
+
+const columns: ColumnDef<Department>[] = [
+    {
+        accessorKey: 'name',
+        header: 'Name',
+        enableSorting: true,
+    },
+    {
+        accessorKey: 'code',
+        header: 'Code',
+        enableSorting: true,
+    },
+    {
+        accessorKey: 'created_at',
+        header: 'Created At',
+        cell: ({ row }) => {
+            return <span>{formatShortDate(row.getValue('created_at'))}</span>;
+        },
+    },
+    {
+        accessorKey: 'updated_at',
+        header: 'Last Modified',
+        cell: ({ row }) => {
+            return <span>{formatShortDate(row.getValue('updated_at'))}</span>;
+        },
+    },
+    {
+        id: 'actions',
+        cell: ({ row }) => {
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
+                            <MoreHorizontal />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem>Export</DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
+        },
     },
 ];
 
@@ -29,27 +77,7 @@ export default function Department() {
                 </div>
 
                 <div className="my-8">
-                    <Table>
-                        <TableCaption>A list of all your departments.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[100px]">Name</TableHead>
-                                <TableHead>Code</TableHead>
-                                <TableHead>Created At</TableHead>
-                                <TableHead className="text-right">Last Modified</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {departments.map((dept) => (
-                                <TableRow key={dept.id}>
-                                    <TableCell>{dept.name}</TableCell>
-                                    <TableCell>{dept.code}</TableCell>
-                                    <TableCell>{formatShortDate(dept.created_at)}</TableCell>
-                                    <TableCell className="text-right">{formatShortDate(dept.updated_at)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <DataTable data={departments} columns={columns} />
                 </div>
             </div>
         </AppLayout>
