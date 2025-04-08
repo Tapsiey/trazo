@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\DocumentReceivedNotification;
+use App\Notifications\DocumentSubmittedNotification;
 
 class DocumentController extends Controller
 {
@@ -18,7 +21,7 @@ class DocumentController extends Controller
         if ($user->hasRole('admin')) {
             $documents = Document::with('uploader')->get();
         } else {
-            $documents = Document::where('uploaded_by', $user->id)
+            $documents = Document::with('uploader')->where('uploaded_by', $user->id)
                 ->orWhere('department_id', $user->department_id)
                 ->get();
         }
@@ -58,7 +61,15 @@ class DocumentController extends Controller
             'department_id' => $request->department_id,
         ]);
 
+        $admins = User::role('admin')->get();
+
         $document->file_url = URL::to($document->file_path);
+
+        foreach ($admins as $admin) {
+            $admin->notify(new DocumentSubmittedNotification($document));
+        }
+
+        $request->user()->notify(new DocumentReceivedNotification($document));
 
         return to_route('documents');
     }
