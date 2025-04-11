@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/app-layout';
 import { capitalize, formatShortDate } from '@/lib/utils';
 import { UserResponse, type BreadcrumbItem } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, usePage, router } from '@inertiajs/react';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, Plus, UserPlus } from 'lucide-react';
@@ -61,7 +61,14 @@ const columns: ColumnDef<UserResponse>[] = [
                         <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem>Export</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => {
+                                router.delete(route('users.destroy', row.original.id));
+                            }}
+                        >
+                            Delete
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

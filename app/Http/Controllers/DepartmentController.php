@@ -11,17 +11,17 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Routing\Controllers\HasMiddleware;
 
-class DepartmentController extends Controller implements HasMiddleware
+class DepartmentController extends Controller
 {
-    public static function middleware()
-    {
-        return [
-            new Middleware('role:admin', only: ['index', 'show']),
-            new Middleware('permission:create-departments', only: ['store']),
-            new Middleware('permission:edit-departments', only: ['update']),
-            new Middleware('permission:delete-departments', only: ['destroy']),
-        ];
-    }
+    // public static function middleware()
+    // {
+    //     return [
+    //         new Middleware('role:admin', only: ['index', 'show']),
+    //         new Middleware('permission:create-departments', only: ['store']),
+    //         new Middleware('permission:edit-departments', only: ['update']),
+    //         new Middleware('permission:delete-departments', only: ['destroy']),
+    //     ];
+    // }
 
     public function index(Request $request): Response
     {
@@ -45,7 +45,8 @@ class DepartmentController extends Controller implements HasMiddleware
             'description' => $request->description,
         ]);
 
-        return response()->json($department, 201);
+
+        return to_route('departments');
     }
 
     public function show($id)
@@ -93,8 +94,7 @@ class DepartmentController extends Controller implements HasMiddleware
         $department = Department::findOrFail($id);
         $department->delete();
 
-        return response()->json([
-            'message' => 'Department deleted successfully',
-        ]);
+
+        return to_route('departments');
     }
 }

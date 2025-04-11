@@ -18,11 +18,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    Route::get('/chat', function () {
+        return Inertia::render('chat');
+    })->name('chat');
+
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents');
 
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
     Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 

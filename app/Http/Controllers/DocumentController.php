@@ -8,6 +8,7 @@ use Inertia\Response;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\DocumentReceivedNotification;
 use App\Notifications\DocumentSubmittedNotification;
@@ -35,7 +36,7 @@ class DocumentController extends Controller
         ]);
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request): RedirectResponse
     {
         $request->validate([
             'title' => 'required|string|max:255',
