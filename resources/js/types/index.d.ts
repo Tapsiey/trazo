@@ -36,6 +36,7 @@ export interface User {
     name: string;
     email: string;
     avatar?: string;
+    role: string;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
@@ -83,5 +84,5 @@ export interface Document {
     department_id: number | null;
     created_at: string;
     updated_at: string;
-    file_url?: string; // optional, added in response
+    document_url?: string; // optional, added in response
 }

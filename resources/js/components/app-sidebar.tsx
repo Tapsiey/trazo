@@ -2,33 +2,10 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { FilesIcon, FileText, LayoutGrid, PanelsRightBottom, UsersIcon } from 'lucide-react';
+import { SharedData, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { FilesIcon, FileText, Inbox, LayoutGrid, PanelsRightBottom, UsersIcon } from 'lucide-react';
 import AppLogo from './app-logo';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Documents',
-        href: '/documents',
-        icon: FilesIcon,
-    },
-    {
-        title: 'Manage Users',
-        href: '/users',
-        icon: UsersIcon,
-    },
-    {
-        title: 'Departments',
-        href: '/departments',
-        icon: PanelsRightBottom,
-    },
-];
 
 const footerNavItems: NavItem[] = [
     {
@@ -39,6 +16,47 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const {
+        auth: { user },
+    } = usePage<SharedData>().props;
+
+    const mainNavItems: NavItem[] =
+        user.role === 'admin'
+            ? [
+                  {
+                      title: 'Dashboard',
+                      href: '/dashboard',
+                      icon: LayoutGrid,
+                  },
+                  {
+                      title: 'Documents',
+                      href: '/documents',
+                      icon: FilesIcon,
+                  },
+                  {
+                      title: 'Manage Users',
+                      href: '/users',
+                      icon: UsersIcon,
+                  },
+                  {
+                      title: 'Departments',
+                      href: '/departments',
+                      icon: PanelsRightBottom,
+                  },
+              ]
+            : [
+                  {
+                      title: 'Overview',
+                      href: '/dashboard',
+                      icon: LayoutGrid,
+                  },
+                  {
+                      title: 'Messages',
+                      href: '/notifications',
+                      icon: Inbox,
+                  },
+              ];
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

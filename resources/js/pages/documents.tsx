@@ -28,7 +28,8 @@ const columns: ColumnDef<Document>[] = [
         accessorKey: 'title',
         header: 'Title',
         cell: ({ row }) => (
-            <Link href="/" className="text-blue-500">
+            //@ts-expect-error
+            <Link href={`/documents/${row.original.id}`} className="text-blue-500">
                 {row.original.title}
             </Link>
         ),
@@ -75,6 +76,7 @@ const columns: ColumnDef<Document>[] = [
     },
     {
         id: 'actions',
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         cell: ({ row }) => {
             return (
                 <DropdownMenu>
@@ -106,9 +108,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Documents() {
     const { documents } = usePage<{ documents: Document[] }>().props;
-
     console.log(documents);
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Documents" />

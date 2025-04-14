@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents');
-
+    Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('documents.show')->name('track.document');
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');

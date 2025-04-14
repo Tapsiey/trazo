@@ -28,7 +28,7 @@ class DocumentController extends Controller
         }
 
         $documents->each(function ($document) {
-            $document->document_url = URL::to($document->file_path);
+            $document->document_url = asset('storage/' . $document->file_path);
         });
 
         return Inertia::render('documents', [
@@ -64,7 +64,7 @@ class DocumentController extends Controller
 
         $admins = User::role('admin')->get();
 
-        $document->file_url = URL::to($document->file_path);
+        $document->document_url = asset('storage/' . $document->file_path);
 
         foreach ($admins as $admin) {
             $admin->notify(new DocumentSubmittedNotification($document));
@@ -73,5 +73,15 @@ class DocumentController extends Controller
         $request->user()->notify(new DocumentReceivedNotification($document));
 
         return to_route('documents');
+    }
+
+    public function show($id)
+    {
+        $document = Document::with('uploader')->findOrFail($id);
+        $document->document_url = asset('storage/' . $document->file_path);
+
+        return Inertia::render('track-document', [
+            'document' => $document,
+        ]);
     }
 }
