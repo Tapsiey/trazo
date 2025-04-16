@@ -84,7 +84,7 @@ const columns: ColumnDef<Department>[] = [
 
 export default function Department() {
     const { departments } = usePage<{ departments: Department[] }>().props;
-
+    console.log(departments);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Departments" />

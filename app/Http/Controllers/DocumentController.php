@@ -7,7 +7,9 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Document;
 use Illuminate\Http\Request;
+use Smalot\PdfParser\Parser;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\DocumentReceivedNotification;
@@ -82,6 +84,43 @@ class DocumentController extends Controller
 
         return Inertia::render('track-document', [
             'document' => $document,
+        ]);
+    }
+
+    public function runPipeline($id)
+    {
+        $document = Document::with('uploader')->findOrFail($id);
+        $document->document_url = asset('storage/' . $document->file_path);
+
+        $filePath = storage_path('app/public/' . $document->file_path);
+        if (!file_exists($filePath)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        $parser = new Parser();
+        $pdf = $parser->parseFile($filePath);
+        $text = $pdf->getText();
+
+        $endpoint = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
+
+        $response = Http::withToken(env('HF_TOKEN'))
+            ->post($endpoint, [
+                'inputs' => $text,
+                'parameters' => [
+                    'candidate_labels' => [
+                        'secondary school application form',
+                        'primary school application form',
+                        'curriculum guide',
+                        'application form',
+                        'request for funding',
+                        'notice',
+                        'letter',
+                    ],
+                ],
+            ]);
+        return response()->json([
+            'tag' => $response['labels'][0] ?? 'Unknown',
+            'confidence' => $response['scores'][0] ?? null,
         ]);
     }
 }

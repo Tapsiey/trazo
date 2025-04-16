@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('documents', function (Blueprint $table) {
             Schema::table('documents', function (Blueprint $table) {
                 $table->string('status')->default('submitted');
+                $table->json('labels')->nullable();
             });
         });
     }
