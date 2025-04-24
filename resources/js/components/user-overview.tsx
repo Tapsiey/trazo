@@ -1,14 +1,14 @@
+import { Badge } from '@/components/ui/badge';
+import { formatShortDate, statuses } from "@/lib/utils";
 import { Link, useForm } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from '@/components/ui/badge';
+import { FilePlus2 } from "lucide-react";
+import { FormEvent } from "react";
 import { DataTable } from "./DataTable/data-table";
-import { statuses, formatShortDate } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { FormEvent } from "react";
-import { FilePlus2 } from "lucide-react";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
 
@@ -53,7 +53,7 @@ export default function UserOverView({ documents }: { documents: Document[] }) {
                 }
                 return (
                     <div className="flex w-[100px] items-center">
-                        {status.icon && <status.icon className="text-muted-foreground mr-2 h-4 w-4" />}
+                        {status.icon && <status.icon className="text-muted-foreground mr-2 size-5!" />}
                         <span>{status.label}</span>
                     </div>
                 );
