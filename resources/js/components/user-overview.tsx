@@ -35,7 +35,7 @@ export default function UserOverView({ documents }: { documents: Document[] }) {
             accessorKey: 'category',
             header: 'Category',
             //@ts-expect-error
-            cell: ({ row }) => <Badge variant="default">{row.original.category.toLowerCase()}</Badge>,
+            cell: ({ row }) => <Badge variant={row.getValue('status') === 'submitted' ? 'default' : 'primary'}>{row.original.category.toLowerCase()}</Badge>,
         },
         {
             accessorKey: 'updated_at',
