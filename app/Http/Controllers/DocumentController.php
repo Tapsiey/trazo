@@ -113,7 +113,7 @@ class DocumentController extends Controller
                         'curriculum guide',
                         'application form',
                         'request for funding',
-                        'notice',
+                        'sschools opening notice',
                         'letter',
                     ],
                 ],

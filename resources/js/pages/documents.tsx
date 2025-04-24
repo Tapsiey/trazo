@@ -108,7 +108,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Documents() {
     const { documents } = usePage<{ documents: Document[] }>().props;
-    console.log(documents);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Documents" />
