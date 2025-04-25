@@ -1,3 +1,4 @@
+import AdminOverView from '@/components/admin-overview';
 import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import UserOverView from '@/components/user-overview';
 import AppLayout from '@/layouts/app-layout';
@@ -16,7 +17,7 @@ export default function Dashboard() {
     const {
         auth: { user },
     } = usePage<SharedData>().props;
-    const { documents } = usePage().props;
+    const { documents, users } = usePage().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -35,7 +36,7 @@ export default function Dashboard() {
                 </div>
                 <div className="relative min-h-[100vh] flex-1 overflow-hidden md:min-h-min">
                     {/* @ts-expect-error */}
-                    {user.role === 'user' ? <UserOverView documents={documents} /> : <UserOverView documents={documents} />}
+                    {user.role === 'user' ? <UserOverView documents={documents} /> : <AdminOverView users={users} />}
                 </div>
             </div>
         </AppLayout>

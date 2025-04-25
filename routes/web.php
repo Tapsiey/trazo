@@ -28,7 +28,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
-    Route::get('/users', [UserController::class, 'index'])->name('users');
 });
 
 

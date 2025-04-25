@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "trazo/document-system",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "HIT400 capstone project application for document management.",
     "keywords": [
         "laravel",
         "framework"
