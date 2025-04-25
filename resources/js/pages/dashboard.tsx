@@ -13,7 +13,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
-
     const {
         auth: { user },
     } = usePage<SharedData>().props;

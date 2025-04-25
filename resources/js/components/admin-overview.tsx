@@ -1,22 +1,22 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { capitalize, formatShortDate } from "@/lib/utils"
-import { UserResponse } from "@/types"
-import { router } from "@inertiajs/react"
-import { ColumnDef } from "@tanstack/react-table"
-import { FileUser, MoreHorizontal, PlusCircle } from "lucide-react"
-import { DataTable } from "./DataTable/data-table"
-import { Button } from "./ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { capitalize, formatShortDate } from '@/lib/utils';
+import { UserResponse } from '@/types';
+import { router } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { FileUser, MoreHorizontal, PlusCircle } from 'lucide-react';
+import { DataTable } from './DataTable/data-table';
+import { Button } from './ui/button';
 
 export default function AdminOverView({ users }: { users: UserResponse[] }) {
     const columns: ColumnDef<UserResponse>[] = [
         {
             header: 'Name',
             accessorKey: 'name',
-            enableSorting: true
+            enableSorting: true,
         },
         {
             header: 'Email',
-            accessorKey: 'email'
+            accessorKey: 'email',
         },
         {
             accessorKey: 'roles',
@@ -62,28 +62,31 @@ export default function AdminOverView({ users }: { users: UserResponse[] }) {
                 );
             },
         },
-    ]
+    ];
     return (
         <div className="absolute inset-0 size-full">
-            <div className="flex my-4 items-center justify-between">
+            <div className="my-4 flex items-center justify-between">
                 <h2 className="text-xl font-semibold">
-                    <FileUser className="inline text-secondary-foreground mr-2" />
-                    Users</h2>
-                <div className="space-x-2 flex">
-                    <Button size='sm' variant='outline'>Add Role</Button>
+                    <FileUser className="text-secondary-foreground mr-2 inline" />
+                    Users
+                </h2>
+                <div className="flex space-x-2">
+                    <Button size="sm" variant="outline">
+                        Add Role
+                    </Button>
                     <NewUserFrm />
                 </div>
             </div>
             <DataTable columns={columns} data={users} />
         </div>
-    )
+    );
 }
 
 function NewUserFrm() {
     return (
-        <Button size='sm'>
+        <Button size="sm">
             <PlusCircle />
             Create User
         </Button>
-    )
+    );
 }

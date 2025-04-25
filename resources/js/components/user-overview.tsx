@@ -1,19 +1,17 @@
 import { Badge } from '@/components/ui/badge';
-import { formatShortDate, statuses } from "@/lib/utils";
-import { Link, useForm } from "@inertiajs/react";
-import { ColumnDef } from "@tanstack/react-table";
-import { FilePlus2 } from "lucide-react";
-import { FormEvent } from "react";
-import { DataTable } from "./DataTable/data-table";
-import { Button } from "./ui/button";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-
+import { formatShortDate, statuses } from '@/lib/utils';
+import { Link, useForm } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { FilePlus2 } from 'lucide-react';
+import { FormEvent } from 'react';
+import { DataTable } from './DataTable/data-table';
+import { Button } from './ui/button';
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
 
 export default function UserOverView({ documents }: { documents: Document[] }) {
-
     const columns: ColumnDef<Document>[] = [
         {
             accessorKey: 'title',
@@ -35,7 +33,9 @@ export default function UserOverView({ documents }: { documents: Document[] }) {
             accessorKey: 'category',
             header: 'Category',
             //@ts-expect-error
-            cell: ({ row }) => <Badge variant={row.getValue('status') === 'submitted' ? 'default' : 'primary'}>{row.original.category.toLowerCase()}</Badge>,
+            cell: ({ row }) => (
+                <Badge variant={row.getValue('status') === 'submitted' ? 'default' : 'primary'}>{row.original.category.toLowerCase()}</Badge>
+            ),
         },
         {
             accessorKey: 'updated_at',
@@ -58,12 +58,12 @@ export default function UserOverView({ documents }: { documents: Document[] }) {
                     </div>
                 );
             },
-        }
+        },
     ];
 
     return (
         <div className="absolute inset-0 size-full">
-            <div className="flex my-4 items-center justify-between">
+            <div className="my-4 flex items-center justify-between">
                 <h2 className="text-xl font-semibold">My Documents</h2>
                 <UploadDocumentFrm />
             </div>
@@ -90,7 +90,7 @@ function UploadDocumentFrm() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button size='sm'>
+                <Button size="sm">
                     <FilePlus2 />
                     Upload
                 </Button>
@@ -102,7 +102,7 @@ function UploadDocumentFrm() {
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div>
-                            <Label htmlFor="name" className="text-right mb-3">
+                            <Label htmlFor="name" className="mb-3 text-right">
                                 Title
                             </Label>
                             <Input
@@ -129,16 +129,13 @@ function UploadDocumentFrm() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="email">
-                                Message
-                            </Label>
+                            <Label htmlFor="email">Message</Label>
                             <Textarea className="mt-2" rows={5} value={data.description} onChange={(e) => setData('description', e.target.value)} />
                         </div>
-
                     </div>
                     <DialogFooter>
                         <DialogClose>
-                            <Button size='sm' disabled={processing} type="submit">
+                            <Button size="sm" disabled={processing} type="submit">
                                 {processing ? 'Uploading...' : 'Upload Document'}
                             </Button>
                         </DialogClose>
