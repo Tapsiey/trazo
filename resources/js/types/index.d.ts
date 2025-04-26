@@ -85,4 +85,17 @@ export interface Document {
     created_at: string;
     updated_at: string;
     document_url?: string; // optional, added in response
+    comments?: Comment[]
+}
+
+
+export interface Comment {
+    id: number;
+    user_id: number;
+    action: string;
+    created_at: string;
+    document_id: number;
+    message: string;
+    updated_at: string;
+    user: User
 }

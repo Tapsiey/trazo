@@ -29,4 +29,9 @@ class Document extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Comment;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Document;
@@ -64,9 +65,17 @@ class DocumentController extends Controller
             'department_id' => $request->department_id,
         ]);
 
+
         $admins = User::role('admin')->get();
 
         $document->document_url = asset('storage/' . $document->file_path);
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => auth()->id(),
+            'action' => 'Request Submitted',
+            'message' => 'Document uploaded successfully by ' . auth()->user()->name,
+        ]);
 
         foreach ($admins as $admin) {
             $admin->notify(new DocumentSubmittedNotification($document));
@@ -79,7 +88,7 @@ class DocumentController extends Controller
 
     public function show($id)
     {
-        $document = Document::with('uploader')->findOrFail($id);
+        $document = Document::with(['uploader', 'comments.user'])->findOrFail($id);
         $document->document_url = asset('storage/' . $document->file_path);
 
         return Inertia::render('track-document', [

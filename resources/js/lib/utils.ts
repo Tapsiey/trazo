@@ -53,3 +53,27 @@ export const statuses = [
         icon: Archive,
     },
 ];
+
+
+export function formatTimestamp(value: string | Date): string {
+    const date = value instanceof Date ? value : new Date(value);
+
+    const day = date.getDate().toString().padStart(2, '0');
+
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+        "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const month = months[date.getMonth()];
+
+    const year = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    const formattedHours = hours.toString().padStart(2, '0');
+
+    return `${day} ${month} ${year} ${formattedHours}:${minutes} ${ampm}`;
+}
