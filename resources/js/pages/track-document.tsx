@@ -42,7 +42,7 @@ export default function ViewDocument() {
                                         sender={comment.user.name}
                                         timestamp={formatTimestamp(comment.updated_at)}
                                         message={comment.message}
-                                        iconColor="purple"
+                                        iconColor={comment.color}
                                         actionUrl="#"
                                     />
                                 })}

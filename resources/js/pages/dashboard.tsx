@@ -16,7 +16,9 @@ export default function Dashboard() {
     const {
         auth: { user },
     } = usePage<SharedData>().props;
-    const { documents, users } = usePage().props;
+    const { documents, users, usage } = usePage().props;
+
+    console.log(usage);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

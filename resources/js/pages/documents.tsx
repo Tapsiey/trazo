@@ -150,7 +150,7 @@ function UploadDocumentFrm() {
             <DialogTrigger asChild>
                 <Button>
                     <FilePlus2 />
-                    Upload
+                    Create
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

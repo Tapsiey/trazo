@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendDocumentNotifications;
 use App\Models\User;
 use App\Models\Comment;
 use Inertia\Inertia;
@@ -9,12 +10,9 @@ use Inertia\Response;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use App\Notifications\DocumentReceivedNotification;
-use App\Notifications\DocumentSubmittedNotification;
 
 class DocumentController extends Controller
 {
@@ -77,11 +75,12 @@ class DocumentController extends Controller
             'message' => 'Document uploaded successfully by ' . auth()->user()->name,
         ]);
 
-        foreach ($admins as $admin) {
-            $admin->notify(new DocumentSubmittedNotification($document));
-        }
+        SendDocumentNotifications::dispatch($document);
+        // foreach ($admins as $admin) {
+        //     $admin->notify(new DocumentSubmittedNotification($document));
+        // }
 
-        $request->user()->notify(new DocumentReceivedNotification($document));
+        // $request->user()->notify(new DocumentReceivedNotification($document));
 
         return to_route('documents');
     }

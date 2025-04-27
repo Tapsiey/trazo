@@ -8,13 +8,15 @@ return new class extends Migration {
 
     public function up(): void
     {
-        Schema::table('notifications', function (Blueprint $table) {
-            $table->string('title')->default('trazo-bot')->nullable();
+        Schema::table('comments', function (Blueprint $table) {
+            $table->string('color')->default('purple')->after('message');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        Schema::table('comments', function (Blueprint $table) {
+
+        });
     }
 };
