@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Document::class, 'uploaded_by');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

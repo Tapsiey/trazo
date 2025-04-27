@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -28,6 +29,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
 
