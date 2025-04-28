@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendDocumentNotifications;
 use App\Models\User;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Document;
@@ -98,10 +99,11 @@ class DocumentController extends Controller
     public function runPipeline($id)
     {
         $document = Document::with('uploader')->findOrFail($id);
-        $document->document_url = asset('storage/' . $document->file_path);
+        // $document->document_url = asset('storage/' . $document->file_path);
 
         $filePath = storage_path('app/public/' . $document->file_path);
         if (!file_exists($filePath)) {
+            Log::error('File not found issue');
             return response()->json(['error' => 'File not found'], 404);
         }
 
@@ -127,6 +129,31 @@ class DocumentController extends Controller
                 ],
             ]);
 
+        $tag = $response['labels'][0] ?? 'unknown';
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => 1,
+            'action' => 'trazo-bot-pipeline',
+            'message' => "The document was automatically tagged into the $tag category.",
+            'color' => 'blue'
+        ]);
+
+        $document->update([
+            'category' => $tag,
+            'status' => 'categorised',
+        ]);
+
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => 1,
+            'action' => 'trazo-bot-pipeline',
+            'message' => "The document status has advanced from submitted to processed and is now under human review.",
+            "color" => "green"
+        ]);
+
+
         $summaryResponse = Http::withToken('HF_TOKEN')
             ->withHeaders([
                 'Content-Type' => 'application/json',
@@ -140,8 +167,10 @@ class DocumentController extends Controller
                 ],
             ]);
 
-        $result = $summaryResponse->json();
-        $summary = $result['summary_text'] ?? 'No summary available, please try re-running the pipeline.';
+        $summaryResult = $summaryResponse->json();
+
+        // Check if the response contains the expected structure
+        $summary = isset($summaryResult[0]['summary_text']) ? $summaryResult[0]['summary_text'] : 'No summary available, failed to generate summary';
 
         Comment::create([
             'document_id' => $document->id,
@@ -149,12 +178,6 @@ class DocumentController extends Controller
             'action' => 'trazo-bot-pipeline',
             'message' => $summary,
         ]);
-
-        // return response()->json([
-        //     'tag' => $response['labels'][0] ?? 'Unknown',
-        //     'confidence' => $response['scores'][0] ?? null,
-        // ]);
-
 
         return to_route('documents');
     }
@@ -174,12 +197,6 @@ class DocumentController extends Controller
         // Delete the document from the database
         $document->delete();
 
-        Comment::create([
-            'document_id' => $id,
-            'user_id' => auth()->id(),
-            'action' => 'Document Deleted',
-            'message' => 'Document deleted by ' . auth()->user()->name,
-        ]);
 
         return redirect()->route('documents')->with('success', 'Document deleted successfully.');
     }

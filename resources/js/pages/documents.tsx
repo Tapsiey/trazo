@@ -76,7 +76,6 @@ const columns: ColumnDef<Document>[] = [
     },
     {
         id: 'actions',
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         cell: ({ row }) => {
             return (
                 <DropdownMenu>
@@ -88,7 +87,7 @@ const columns: ColumnDef<Document>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[160px]">
                         <DropdownMenuItem onClick={() => {
-                            router.post(`/documents/${row.getValue('id')}/run-pipeline`, {}, {
+                            router.post(`/documents/${row.original.id}/run-pipeline`, {}, {
                                 onSuccess: (page) => {
                                     console.log('Pipeline finished:', page.props);
                                     // alert('Pipeline run successfully!');
@@ -103,7 +102,7 @@ const columns: ColumnDef<Document>[] = [
                         <DropdownMenuItem>Mark Completed</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem variant="destructive" onClick={() => {
-                            router.delete(route('departments.destroy', row.getValue('id')));
+                            router.delete(route('documents.destroy', row.original.id));
                         }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
