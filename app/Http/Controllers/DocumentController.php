@@ -121,14 +121,41 @@ class DocumentController extends Controller
                         'curriculum guide',
                         'application form',
                         'request for funding',
-                        'sschools opening notice',
+                        'schools opening notice',
                         'letter',
                     ],
                 ],
             ]);
-        return response()->json([
-            'tag' => $response['labels'][0] ?? 'Unknown',
-            'confidence' => $response['scores'][0] ?? null,
+
+        $summaryResponse = Http::withToken('HF_TOKEN')
+            ->withHeaders([
+                'Content-Type' => 'application/json',
+            ])
+            ->post('https://api-inference.huggingface.co/models/facebook/bart-large-cnn', [
+                'inputs' => $text,
+                'parameters' => [
+                    'max_length' => 150,
+                    'min_length' => 50,
+                    'do_sample' => false,
+                ],
+            ]);
+
+        $result = $summaryResponse->json();
+        $summary = $result['summary_text'] ?? 'No summary available, please try re-running the pipeline.';
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => 1,
+            'action' => 'trazo-bot-pipeline',
+            'message' => $summary,
         ]);
+
+        // return response()->json([
+        //     'tag' => $response['labels'][0] ?? 'Unknown',
+        //     'confidence' => $response['scores'][0] ?? null,
+        // ]);
+
+
+        return to_route('documents');
     }
 }

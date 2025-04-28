@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { formatShortDate, statuses } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { FilePlus2, MoreHorizontal } from 'lucide-react';
 import { type FormEvent } from 'react';
@@ -87,7 +87,18 @@ const columns: ColumnDef<Document>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[160px]">
-                        <DropdownMenuItem>Run Pipeline</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            router.post(`/documents/${row.getValue('id')}/run-pipeline`, {}, {
+                                onSuccess: (page) => {
+                                    console.log('Pipeline finished:', page.props);
+                                    // alert('Pipeline run successfully!');
+                                },
+                                onError: (errors) => {
+                                    console.error(errors);
+                                    // alert('Failed to run pipeline.');
+                                },
+                            });
+                        }}>Run Pipeline</DropdownMenuItem>
                         <DropdownMenuItem>Assign To</DropdownMenuItem>
                         <DropdownMenuItem>Mark Completed</DropdownMenuItem>
                         <DropdownMenuSeparator />
