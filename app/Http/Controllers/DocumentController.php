@@ -158,4 +158,31 @@ class DocumentController extends Controller
 
         return to_route('documents');
     }
+
+    public function destroy($id): RedirectResponse
+    {
+        // Ensure only users with roles other than 'user' can delete the document
+        if (auth()->user()->hasRole('user')) {
+            return redirect()->route('documents')->with('error', 'You do not have permission to delete this document.');
+        }
+
+        $document = Document::findOrFail($id);
+
+        // Remove the associated file from storage
+        Storage::disk('public')->delete($document->file_path);
+
+        // Delete the document from the database
+        $document->delete();
+
+        Comment::create([
+            'document_id' => $id,
+            'user_id' => auth()->id(),
+            'action' => 'Document Deleted',
+            'message' => 'Document deleted by ' . auth()->user()->name,
+        ]);
+
+        return redirect()->route('documents')->with('success', 'Document deleted successfully.');
+    }
+
+
 }

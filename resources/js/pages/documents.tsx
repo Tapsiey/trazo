@@ -102,7 +102,9 @@ const columns: ColumnDef<Document>[] = [
                         <DropdownMenuItem>Assign To</DropdownMenuItem>
                         <DropdownMenuItem>Mark Completed</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                        <DropdownMenuItem variant="destructive" onClick={() => {
+                            router.delete(route('departments.destroy', row.getValue('id')));
+                        }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

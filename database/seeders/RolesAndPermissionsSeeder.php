@@ -54,19 +54,13 @@ class RolesAndPermissionsSeeder extends Seeder
             $viewDocument
         ]);
 
-        $superAdmin = User::create([
-            'name' => 'Mutsawashe Dupwa',
-            'email' => 'h210154y@hit.ac.zw',
-            'password' => Hash::make('Mutsawashe'),
-        ]);
-
 
         Department::create([
             'name' => 'Quality Assurance Junior School',
             'code' => 'QAJS',
         ]);
 
-        Department::create([
+        $qaSecondary = Department::create([
             'name' => 'Quality Assurance Secondary and Non Formal Education',
             'code' => 'QASNFE',
         ]);
@@ -76,11 +70,28 @@ class RolesAndPermissionsSeeder extends Seeder
             'code' => 'QAIS',
         ]);
 
-        Department::create([
+        $curriculum = Department::create([
             'name' => 'Curriculum Development and Technical Services',
             'code' => 'CDTS',
         ]);
 
+        $trazoBot = User::create([
+            'name' => 'Trazo Bot',
+            'email' => 'ternalify@gmail.com',
+            'password' => Hash::make('Mutsawashe'),
+            'department_id' => $curriculum->id
+        ]);
+
+
+        $superAdmin = User::create([
+            'name' => 'Mutsawashe Dupwa',
+            'email' => 'h210154y@hit.ac.zw',
+            'password' => Hash::make('Mutsawashe'),
+            'department_id' => $qaSecondary->id
+        ]);
+
+        $trazoBot->assignRole('admin');
         $superAdmin->assignRole('admin');
+
     }
 }
