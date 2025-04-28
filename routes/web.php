@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('documents.runPipeline');
     Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('track.document');
     Route::post('/documents/upload', [DocumentController::class, 'upload'])->name('upload');
+    Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
     Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
 
