@@ -40,10 +40,12 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'root' => env('APP_ENV') === 'production'
+                ? '/app/storage/app/public'
+                : storage_path('app/public'),
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
-            'throw' => false,
+            'throw' => true,
             'report' => false,
         ],
 
