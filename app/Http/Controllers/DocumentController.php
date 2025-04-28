@@ -23,8 +23,8 @@ class DocumentController extends Controller
         if ($user->hasRole('admin')) {
             $documents = Document::with('uploader')->get();
         } else {
-            $documents = Document::with('uploader')->where('uploaded_by', $user->id)
-                ->orWhere('department_id', $user->department_id)
+            $documents = Document::with('uploader')
+                ->where('uploaded_by', $user->id)
                 ->get();
         }
 
@@ -64,7 +64,7 @@ class DocumentController extends Controller
         ]);
 
 
-        $admins = User::role('admin')->get();
+        // $admins = User::role('admin')->get();
 
         $document->document_url = asset('storage/' . $document->file_path);
 
