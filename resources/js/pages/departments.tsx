@@ -17,7 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { formatShortDate } from '@/lib/utils';
 import { type BreadcrumbItem, type Department } from '@/types';
-import { Head, useForm, usePage, router } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, PlusCircle } from 'lucide-react';
 import { FormEvent } from 'react';
@@ -153,7 +153,7 @@ function CreateDepartmentFrm() {
                             <Label htmlFor="email" className="text-right">
                                 Description
                             </Label>
-                            <Textarea className="col-span-3" value={data.description} onChange={(e) => setData('description', e.target.value)} />
+                            <Textarea className="col-span-3" rows={5} value={data.description} onChange={(e) => setData('description', e.target.value)} />
                         </div>
                     </div>
                     <DialogFooter>

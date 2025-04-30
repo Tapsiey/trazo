@@ -6,11 +6,13 @@ use App\Models\Document;
 use App\Notifications\DocumentReceivedNotification;
 use App\Notifications\DocumentSubmittedNotification;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 
 class SendDocumentNotifications implements ShouldQueue
@@ -26,12 +28,19 @@ class SendDocumentNotifications implements ShouldQueue
 
     public function handle(): void
     {
-        $admins = User::role('admin')->get();
+        try {
+            $admins = User::role('admin')->get();
 
-        foreach ($admins as $admin) {
-            $admin->notify(new DocumentSubmittedNotification($this->document));
+            Log::info('Running sending of emails...');
+
+            foreach ($admins as $admin) {
+                $admin->notify(new DocumentSubmittedNotification($this->document));
+            }
+
+            $this->document->uploader->notify(new DocumentReceivedNotification($this->document));
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
         }
-
-        $this->document->uploader->notify(new DocumentReceivedNotification($this->document));
     }
 }

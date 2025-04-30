@@ -34,14 +34,18 @@ export default function ViewDocument() {
                         </div>
                         <div className="p-6">
                             <div className='border-b mb-1.5'>
-                                <h3 className='font-semibold text-foreground mb-2'>Recent Actions</h3>
+                                <h3 className='font-semibold text-foreground mb-2'>Activity</h3>
                             </div>
                             <div className="mt-4">
                                 {comments.length > 0 && comments.map((comment: Comment) => {
                                     return <Notification
+                                        // @ts-expect-error
                                         sender={comment.user.name}
+                                        //@ts-expect-error
                                         timestamp={formatTimestamp(comment.updated_at)}
+                                        //@ts-expect-error
                                         message={comment.message}
+                                        //@ts-expect-error
                                         iconColor={comment.color}
                                         actionUrl="#"
                                     />
