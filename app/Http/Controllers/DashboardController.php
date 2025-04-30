@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\Document;
 use App\Models\User;
@@ -15,10 +16,22 @@ class DashboardController extends Controller
         $isRegularUser = $user->hasRole('user');
 
         $usage = [
-            'total_documents' => Document::count(),
-            'recent_documents' => Document::orderBy('created_at', 'desc')->take(5)->count(),
-            'total_users' => User::count(),
-            'department_documents' => Document::where('department_id', $user->department_id)->count(),
+            [
+                'name' => 'Total Documents',
+                'stat' => Document::count(),
+            ],
+            [
+                'name' => 'Recent Documents',
+                'stat' => Document::orderBy('created_at', 'desc')->take(5)->count(),
+            ],
+            [
+                'name' => 'Total Users',
+                'stat' => User::count(),
+            ],
+            [
+                'name' => 'Departments',
+                'stat' => Department::count(),
+            ],
         ];
 
         if ($isRegularUser) {

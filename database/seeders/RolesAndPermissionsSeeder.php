@@ -60,6 +60,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'code' => 'QAJS',
         ]);
 
+        $automationService = Department::create([
+            'name' => 'Automation Service',
+            'code' => 'QAS',
+        ]);
+
         $qaSecondary = Department::create([
             'name' => 'Quality Assurance Secondary and Non Formal Education',
             'code' => 'QASNFE',
@@ -76,12 +81,11 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         $trazoBot = User::create([
-            'name' => 'Trazo Bot',
+            'name' => 'trazo-bot',
             'email' => 'ternalify@gmail.com',
             'password' => Hash::make('Mutsawashe'),
-            'department_id' => $curriculum->id
+            'department_id' => $automationService->id,
         ]);
-
 
         $superAdmin = User::create([
             'name' => 'Mutsawashe Dupwa',

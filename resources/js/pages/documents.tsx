@@ -87,6 +87,7 @@ const columns: ColumnDef<Document>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[160px]">
                         <DropdownMenuItem onClick={() => {
+                            //@ts-expect-error
                             router.post(`/documents/${row.original.id}/run-pipeline`, {}, {
                                 onSuccess: (page) => {
                                     console.log('Pipeline finished:', page.props);
@@ -102,6 +103,7 @@ const columns: ColumnDef<Document>[] = [
                         <DropdownMenuItem>Mark Completed</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem variant="destructive" onClick={() => {
+                            //@ts-expect-error
                             router.delete(route('documents.destroy', row.original.id));
                         }}>Delete</DropdownMenuItem>
                     </DropdownMenuContent>
