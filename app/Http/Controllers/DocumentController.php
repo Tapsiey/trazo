@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendDocumentNotifications;
 use App\Models\User;
 use App\Models\Comment;
+use App\Notifications\DocumentRequestCompleted;
+use App\Notifications\DocumentSubmissionCompleted;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -75,13 +76,12 @@ class DocumentController extends Controller
             'action' => 'Request Submitted',
             'message' => 'Document uploaded successfully by ' . auth()->user()->name,
         ]);
+        $admins = User::role('admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new DocumentRequestCompleted($document));
+        }
 
-        SendDocumentNotifications::dispatch($document);
-        // foreach ($admins as $admin) {
-        //     $admin->notify(new DocumentSubmittedNotification($document));
-        // }
-
-        // $request->user()->notify(new DocumentReceivedNotification($document));
+        $request->user()->notify(new DocumentSubmissionCompleted($document));
 
         return to_route('documents');
     }

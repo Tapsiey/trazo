@@ -5,9 +5,11 @@ namespace App\Notifications;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class DocumentReceivedNotification extends Notification
+class DocumentRequestCompleted extends Notification
 {
-    public function __construct(public $document) {}
+    public function __construct(public $document)
+    {
+    }
 
     public function via($notifiable)
     {
