@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
-import { Archive, CheckCircle, CircleOff, FolderKanban, NotebookText, SendHorizonal } from 'lucide-react';
+import { Archive, Boxes, CheckCircle, CircleOff, FolderKanban, SendHorizonal } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -24,12 +24,12 @@ export function capitalize(word: string) {
 export const statuses = [
     {
         value: 'categorised',
-        label: 'Categorised',
-        icon: NotebookText,
+        label: 'Under Review',
+        icon: Boxes,
     },
     {
         value: 'in-review',
-        label: 'In Review',
+        label: 'Forwarded',
         icon: FolderKanban,
     },
     {

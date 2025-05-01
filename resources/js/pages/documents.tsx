@@ -61,8 +61,8 @@ const columns: ColumnDef<Document>[] = [
                 return null;
             }
             return (
-                <div className="flex w-[100px] items-center">
-                    {status.icon && <status.icon className="text-muted-foreground mr-2 h-4 w-4" />}
+                <div className="flex items-center">
+                    {status.icon && <status.icon className="text-muted-foreground mr-2 !size-4" />}
                     <span>{status.label}</span>
                 </div>
             );
@@ -212,7 +212,7 @@ function UploadDocumentFrm() {
                     <DialogFooter>
                         <DialogClose>
                             <Button disabled={processing} type="submit">
-                                {processing ? 'Uploading...' : 'Upload Document'}
+                                {processing ? 'Uploading...' : 'Submit'}
                             </Button>
                         </DialogClose>
                     </DialogFooter>
