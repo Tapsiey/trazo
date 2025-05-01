@@ -78,7 +78,7 @@ class DocumentController extends Controller
             'message' => 'Document uploaded successfully by ' . auth()->user()->name,
         ]);
 
-        ProcessDocumentSubmission::dispatch($document)
+        ProcessDocumentSubmission::dispatch($document);
 
         // $admins = User::role('admin')->get();
         // foreach ($admins as $admin) {
