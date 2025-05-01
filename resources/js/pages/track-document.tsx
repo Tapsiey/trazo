@@ -1,8 +1,9 @@
+import Comment from '@/components/Comment';
 import { Notification } from '@/components/notification';
 import PDFViewer from '@/components/pdf-viewer';
 import AppLayout from '@/layouts/app-layout';
-import { formatTimestamp } from '@/lib/utils';
-import { type BreadcrumbItem } from '@/types';
+import { timeAgo } from '@/lib/utils';
+import { SharedData, type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -18,6 +19,9 @@ export default function ViewDocument() {
     const { document } = usePage<{ document: Document }>().props;
     //@ts-expect-error
     const { comments } = document;
+    const {
+        auth: { user },
+    } = usePage<SharedData>().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -34,7 +38,7 @@ export default function ViewDocument() {
                         </div>
                         <div className="p-6">
                             <div className='border-b mb-1.5'>
-                                <h3 className='font-semibold text-foreground mb-2'>Activity</h3>
+                                <h3 className='font-semibold text-foreground mb-2'>Comments & History</h3>
                             </div>
                             <div className="mt-4">
                                 {comments.length > 0 && comments.map((comment: Comment) => {
@@ -42,7 +46,7 @@ export default function ViewDocument() {
                                         // @ts-expect-error
                                         sender={comment.user.name}
                                         //@ts-expect-error
-                                        timestamp={formatTimestamp(comment.updated_at)}
+                                        timestamp={timeAgo(comment.updated_at)}
                                         //@ts-expect-error
                                         message={comment.message}
                                         //@ts-expect-error
@@ -51,6 +55,7 @@ export default function ViewDocument() {
                                     />
                                 })}
                             </div>
+                            {user.role === 'admin' && <Comment document_id={document.id} />}
                         </div>
                     </div>
                 </div>
