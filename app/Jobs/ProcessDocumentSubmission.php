@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Document;
-use App\Notifications\DocumentReceivedNotification;
-use App\Notifications\DocumentSubmittedNotification;
+use App\Notifications\DocumentRequestCompleted;
+use App\Notifications\DocumentSubmissionCompleted;
 use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +15,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 
-class SendDocumentNotifications implements ShouldQueue
+class ProcessDocumentSubmission implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,10 +34,10 @@ class SendDocumentNotifications implements ShouldQueue
             Log::info('Running sending of emails...');
 
             foreach ($admins as $admin) {
-                $admin->notify(new DocumentSubmittedNotification($this->document));
+                $admin->notify(new DocumentRequestCompleted($this->document));
             }
 
-            $this->document->uploader->notify(new DocumentReceivedNotification($this->document));
+            $this->document->uploader->notify(new DocumentSubmissionCompleted($this->document));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());

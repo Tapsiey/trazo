@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessDocumentSubmission;
 use App\Models\User;
 use App\Models\Comment;
 use App\Notifications\DocumentRequestCompleted;
@@ -76,12 +77,15 @@ class DocumentController extends Controller
             'action' => 'Request Submitted',
             'message' => 'Document uploaded successfully by ' . auth()->user()->name,
         ]);
-        $admins = User::role('admin')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new DocumentRequestCompleted($document));
-        }
 
-        $request->user()->notify(new DocumentSubmissionCompleted($document));
+        ProcessDocumentSubmission::dispatch($document)
+
+        // $admins = User::role('admin')->get();
+        // foreach ($admins as $admin) {
+        //     $admin->notify(new DocumentRequestCompleted($document));
+        // }
+
+        // $request->user()->notify(new DocumentSubmissionCompleted($document));
 
         return to_route('documents');
     }
