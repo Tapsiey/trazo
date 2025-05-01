@@ -11,11 +11,33 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const userUsage = [
+    {
+        name: "Completed Submissions",
+        stat: 0,
+    },
+    {
+        name: "Pending Submissions",
+        stat: 0,
+    },
+    {
+        name: "Storage",
+        stat: 0,
+    },
+    {
+        name: "Rejected",
+        stat: 0,
+    }
+]
+
+
 export default function Dashboard() {
     const {
         auth: { user },
     } = usePage<SharedData>().props;
     const { documents, users, usage } = usePage().props;
+
+    const statsToRender = user.role === 'admin' ? usage : userUsage;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -24,7 +46,7 @@ export default function Dashboard() {
                 <div>
                     <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-4">
                         {/* @ts-expect-error */}
-                        {usage.map((item) => (
+                        {statsToRender.map((item) => (
                             <div key={item.name} className="overflow-hidden rounded-lg bg-white px-4 py-5 border border-border shadow-xs sm:p-6">
                                 <dt className="truncate text-sm font-medium text-gray-500">{item.name}</dt>
                                 <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{item.stat}</dd>
