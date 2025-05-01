@@ -31,8 +31,6 @@ class ProcessDocumentSubmission implements ShouldQueue
         try {
             $admins = User::role('admin')->get();
 
-            Log::info('Running sending of emails...');
-
             foreach ($admins as $admin) {
                 $admin->notify(new DocumentRequestCompleted($this->document));
             }

@@ -142,39 +142,12 @@ class DocumentController extends Controller
             'status' => 'categorised',
         ]);
 
-
         Comment::create([
             'document_id' => $document->id,
             'user_id' => 1,
             'action' => 'trazo-bot-pipeline',
             'message' => "The document status has advanced from submitted to processed and is now under human review.",
             "color" => "green"
-        ]);
-
-
-        $summaryResponse = Http::withToken('HF_TOKEN')
-            ->withHeaders([
-                'Content-Type' => 'application/json',
-            ])
-            ->post('https://api-inference.huggingface.co/models/facebook/bart-large-cnn', [
-                'inputs' => $text,
-                'parameters' => [
-                    'max_length' => 150,
-                    'min_length' => 50,
-                    'do_sample' => false,
-                ],
-            ]);
-
-        $summaryResult = $summaryResponse->json();
-
-        // Check if the response contains the expected structure
-        $summary = isset($summaryResult[0]['summary_text']) ? $summaryResult[0]['summary_text'] : 'No summary available, failed to generate summary';
-
-        Comment::create([
-            'document_id' => $document->id,
-            'user_id' => 1,
-            'action' => 'trazo-bot-pipeline',
-            'message' => $summary,
         ]);
 
         return to_route('documents');
