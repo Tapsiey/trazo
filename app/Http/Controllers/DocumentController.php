@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessDocumentCategory;
 use App\Jobs\ProcessDocumentSubmission;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Log;
@@ -96,59 +97,8 @@ class DocumentController extends Controller
 
     public function runPipeline($id)
     {
-        $document = Document::with('uploader')->findOrFail($id);
-        // $document->document_url = asset('storage/' . $document->file_path);
 
-        $filePath = storage_path('app/public/' . $document->file_path);
-        if (!file_exists($filePath)) {
-            Log::error('File not found issue');
-            return response()->json(['error' => 'File not found'], 404);
-        }
-
-        $parser = new Parser();
-        $pdf = $parser->parseFile($filePath);
-        $text = $pdf->getText();
-
-        $endpoint = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
-
-        $response = Http::withToken(env('HF_TOKEN'))
-            ->post($endpoint, [
-                'inputs' => $text,
-                'parameters' => [
-                    'candidate_labels' => [
-                        'secondary school application form',
-                        'primary school application form',
-                        'curriculum guide',
-                        'application form',
-                        'request for funding',
-                        'schools opening notice',
-                        'letter',
-                    ],
-                ],
-            ]);
-
-        $tag = $response['labels'][0] ?? 'unknown';
-
-        Comment::create([
-            'document_id' => $document->id,
-            'user_id' => 1,
-            'action' => 'trazo-bot-pipeline',
-            'message' => "The document was automatically tagged into the $tag category.",
-            'color' => 'blue'
-        ]);
-
-        $document->update([
-            'category' => $tag,
-            'status' => 'categorised',
-        ]);
-
-        Comment::create([
-            'document_id' => $document->id,
-            'user_id' => 1,
-            'action' => 'trazo-bot-pipeline',
-            'message' => "The document status has advanced from submitted to processed and is now under human review.",
-            "color" => "green"
-        ]);
+        ProcessDocumentCategory::dispatch($id);
 
         return to_route('documents');
     }

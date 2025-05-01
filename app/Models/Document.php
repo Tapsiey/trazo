@@ -18,6 +18,7 @@ class Document extends Model
         'category',
         'uploaded_by',
         'department_id',
+        'status'
     ];
 
     public function uploader()
