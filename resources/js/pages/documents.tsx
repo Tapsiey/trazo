@@ -162,7 +162,7 @@ function UploadDocumentFrm() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button>
+                <Button disabled>
                     <FilePlus2 />
                     Create
                 </Button>
