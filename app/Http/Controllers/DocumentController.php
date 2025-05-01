@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessDocumentSubmission;
-use App\Models\User;
 use App\Models\Comment;
-use App\Notifications\DocumentRequestCompleted;
-use App\Notifications\DocumentSubmissionCompleted;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -65,9 +62,6 @@ class DocumentController extends Controller
             'uploaded_by' => auth()->id(),
             'department_id' => $request->department_id,
         ]);
-
-
-        // $admins = User::role('admin')->get();
 
         $document->document_url = asset('storage/' . $document->file_path);
 
