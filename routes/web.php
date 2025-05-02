@@ -23,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('chat');
     })->name('chat');
 
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents');

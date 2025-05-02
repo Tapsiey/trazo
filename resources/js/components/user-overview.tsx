@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge';
-import { formatShortDate, statuses } from '@/lib/utils';
+import { formatDateTime, statuses } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { FilePlus2 } from 'lucide-react';
@@ -41,7 +41,7 @@ export default function UserOverView({ documents }: { documents: Document[] }) {
             accessorKey: 'updated_at',
             header: 'Uploaded',
             //@ts-expect-error
-            cell: ({ row }) => formatShortDate(row.original.updated_at),
+            cell: ({ row }) => formatDateTime(row.original.updated_at),
         },
         {
             accessorKey: 'status',

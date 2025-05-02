@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Document;
 use App\Models\User;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
@@ -34,6 +35,8 @@ class DashboardController extends Controller
             ],
         ];
 
+        $roles = Role::pluck('name')->toArray();
+
         if ($isRegularUser) {
             $documents = Document::with('uploader')
                 ->where('uploaded_by', $user->id)
@@ -47,7 +50,9 @@ class DashboardController extends Controller
             return Inertia::render('dashboard', [
                 'usage' => [],
                 'documents' => $documents,
-                'users' => []
+                'users' => [],
+                "roles" => [],
+                "departments" => []
             ]);
 
         }
@@ -56,7 +61,9 @@ class DashboardController extends Controller
         return Inertia::render('dashboard', [
             'usage' => $usage,
             'users' => $users,
-            'documents' => []
+            'documents' => [],
+            'roles' => $roles,
+            'departments' => Department::all()
         ]);
 
     }

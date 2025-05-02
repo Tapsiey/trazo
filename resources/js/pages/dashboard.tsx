@@ -35,8 +35,8 @@ export default function Dashboard() {
     const {
         auth: { user },
     } = usePage<SharedData>().props;
-    const { documents, users, usage } = usePage().props;
-
+    const { documents, users, usage, roles, departments } = usePage().props;
+    console.log(departments)
     const statsToRender = user.role === 'admin' ? usage : userUsage;
 
     return (
@@ -56,7 +56,7 @@ export default function Dashboard() {
                 </div>
                 <div className="relative min-h-[100vh] mt-8 flex-1 overflow-hidden md:min-h-min">
                     {/* @ts-expect-error */}
-                    {user.role === 'user' ? <UserOverView documents={documents} /> : <AdminOverView users={users} />}
+                    {user.role === 'user' ? <UserOverView documents={documents} /> : <AdminOverView roles={roles} departments={departments} users={users} />}
                 </div>
             </div>
         </AppLayout>
