@@ -17,6 +17,18 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
+    protected array $candidateLabels = [
+        'Request for Funding',
+        'Notice',
+        'Official Letter',
+        'Circular',
+        'Report',
+        'application form',
+        'Policy Document',
+        'Research Paper',
+        'Assessment Report',
+        'Newsletter',
+    ];
     public function index(Request $request): Response
     {
         $user = $request->user();
@@ -97,8 +109,48 @@ class DocumentController extends Controller
 
     public function runPipeline($id)
     {
+        $document = Document::with('uploader')->find($id);
 
-        ProcessDocumentCategory::dispatch($id);
+        if (!$document) {
+            Log::error("Document  not found");
+            return;
+        }
+
+        $filePath = storage_path('app/public/' . $document->file_path);
+        if (!file_exists($filePath)) {
+            Log::error("file not found at {$filePath}");
+            return;
+        }
+
+        // 1) extract text
+        $parser = new Parser();
+        $pdf = $parser->parseFile($filePath);
+        $extractedText = $pdf->getText();
+
+        $text = trim(preg_replace('/\s+/', ' ', $extractedText));
+        $tag = $this->predictCategory($text);
+        Log::info($tag);
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => 1,
+            'action' => 'trazo-bot-pipeline',
+            'message' => "The document was automatically auto-tagged into “{$tag}” category.",
+            'color' => 'orange',
+        ]);
+
+        $document->update([
+            'category' => $tag,
+            'status' => 'categorised',
+        ]);
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => 1,
+            'action' => 'trazo-bot-pipeline',
+            'message' => "Status advanced to “processed” and queued for human review.",
+            'color' => 'orange',
+        ]);
 
         return to_route('documents');
     }
@@ -142,5 +194,19 @@ class DocumentController extends Controller
         return redirect()->route('documents')->with('success', 'Document status updated.');
     }
 
+    public function predictCategory(string $text): string
+    {
+        $endpoint = 'https://api-inference.huggingface.co/models/facebook/bart-large-mnli';
+        $token = env('HF_TOKEN');
 
+        $response = Http::withToken($token)
+            ->post($endpoint, [
+                'inputs' => $text,
+                'parameters' => [
+                    'candidate_labels' => $this->candidateLabels,
+                ],
+            ]);
+
+        return $response->json('labels.0', 'unknown');
+    }
 }
