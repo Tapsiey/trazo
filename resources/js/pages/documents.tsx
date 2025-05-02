@@ -100,7 +100,12 @@ const columns: ColumnDef<Document>[] = [
                             });
                         }}>Run Pipeline</DropdownMenuItem>
                         <DropdownMenuItem>Assign To</DropdownMenuItem>
-                        <DropdownMenuItem>Mark Completed</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            //@ts-expect-error
+                            router.patch(`/documents/${row.original.id}/status`, {
+                                status: 'done'
+                            });
+                        }}>Mark Completed</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem variant="destructive" onClick={() => {
                             //@ts-expect-error

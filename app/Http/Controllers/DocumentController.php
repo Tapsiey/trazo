@@ -121,6 +121,26 @@ class DocumentController extends Controller
 
         return redirect()->route('documents')->with('success', 'Document deleted successfully.');
     }
+    public function updateStatus(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'status' => 'required|string|max:255',
+        ]);
+
+        $document = Document::findOrFail($id);
+        $document->status = $request->status;
+        $document->save();
+
+        Comment::create([
+            'document_id' => $document->id,
+            'user_id' => auth()->id(),
+            'action' => 'Status Updated',
+            'message' => 'Document status updated to "' . $request->status . '" by ' . auth()->user()->name,
+            'color' => 'green'
+        ]);
+
+        return redirect()->route('documents')->with('success', 'Document status updated.');
+    }
 
 
 }

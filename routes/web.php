@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents');
+    Route::patch('/documents/{id}/status', [DocumentController::class, 'updateStatus'])->name('documents.status');
     Route::post('/documents/{id}/run-pipeline', [DocumentController::class, 'runPipeline'])
         ->name('documents.runPipeline');
     Route::get('/documents/{id}', [DocumentController::class, 'show'])->name('track.document');
