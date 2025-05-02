@@ -14,20 +14,51 @@ import { Textarea } from './ui/textarea';
 const columnHelper = createColumnHelper<Document>();
 
 const columns: ColumnDef<Document, any>[] = [
-    columnHelper.accessor('title', {
-        header: 'Name',
-        cell: info => info.getValue(),
+    columnHelper.display({
+        header: 'Title',
+        cell: ({ row }) => (
+            <Link href={`/documents/${row.original.id}`} className="text-orange-500">
+                {row.original.title}
+            </Link>
+        ),
     }),
- 
+    columnHelper.display({
+        header: 'Size',
+        cell: ({ row }) => <span>{parseFloat(row.original.file_size / 1024).toFixed(2)} KB</span>
+    }),
+    columnHelper.display({
+        header: 'Category',
+        cell: ({ row }) => (
+            <Badge variant={row.getValue('status') === 'submitted' ? 'default' : 'primary'}>{row.original.category.toLowerCase()}</Badge>
+        ),
+    }),
+    columnHelper.display({
+        header: 'Added On',
+        cell: ({ row }) => formatDateTime(row.original.updated_at),
+    }),
+    columnHelper.display({
+        header: 'Status',
+        cell: ({ row }) => {
+            const status = statuses.find((status) => status.value === row.original.status);
+            if (!status) {
+                return null;
+            }
+            return (
+                <div className="flex items-center">
+                    {status.icon && <status.icon className="text-muted-foreground mr-2 !size-4" />}
+                    <span>{status.label}</span>
+                </div>
+            );
+        },
+    }),
 ];
 
 export default function UserOverView({ documents }: { documents: Document[] }) {
 
-
     return (
         <div className="absolute inset-0 size-full">
             <div className="my-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold">My Documents</h2>
+                <h2 className="text-xl font-semibold">Submitted Requests</h2>
                 <UploadDocumentFrm />
             </div>
             <DataTable data={documents} columns={columns} />
