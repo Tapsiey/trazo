@@ -20,6 +20,14 @@ const permissionsList = {
         { name: 'delete-users', label: 'Delete Users' },
         { name: 'assign-roles', label: 'Assign Roles' },
     ],
+    Roles: [
+        { name: 'create-role', label: 'Create Role' },
+        { name: 'view-role', label: 'View Role' },
+        { name: 'edit-role', label: 'Edit Role' },
+        {
+            name: 'delete-role', label: 'Delete Role'
+        }
+    ]
 };
 
 export default function NewRoleFrm() {

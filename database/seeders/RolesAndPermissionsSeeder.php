@@ -30,6 +30,22 @@ class RolesAndPermissionsSeeder extends Seeder
         $viewDocument = Permission::create(['name' => 'view-documents']);
         $uploadDocument = Permission::create(['name' => 'upload-documents']);
 
+        $permissions = [
+            'edit-departments',
+            'create-departments',
+            'delete-departments',
+            'view-departments',
+            'assign-roles',
+            'create-roles',
+            'edit-roles',
+            'delete-roles',
+            'view-roles',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+
 
         $admin->givePermissionTo([
             $createDocument,

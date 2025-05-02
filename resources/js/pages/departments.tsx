@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
-import { formatShortDate } from '@/lib/utils';
+import { formatDateTime } from '@/lib/utils';
 import { type BreadcrumbItem, type Department } from '@/types';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -44,14 +44,14 @@ const columns: ColumnDef<Department>[] = [
         accessorKey: 'created_at',
         header: 'Created At',
         cell: ({ row }) => {
-            return <span>{formatShortDate(row.getValue('created_at'))}</span>;
+            return <span>{formatDateTime(row.getValue('created_at'))}</span>;
         },
     },
     {
         accessorKey: 'updated_at',
         header: 'Last Modified',
         cell: ({ row }) => {
-            return <span>{formatShortDate(row.getValue('updated_at'))}</span>;
+            return <span>{formatDateTime(row.getValue('updated_at'))}</span>;
         },
     },
     {
@@ -60,7 +60,7 @@ const columns: ColumnDef<Department>[] = [
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="data-[state=open]:bg-muted flex h-8 w-8 p-0">
+                        <Button variant="ghost" className="data-[state=open]:bg-muted flex size-4 p-0">
                             <MoreHorizontal />
                             <span className="sr-only">Open menu</span>
                         </Button>
@@ -84,7 +84,6 @@ const columns: ColumnDef<Department>[] = [
 
 export default function Department() {
     const { departments } = usePage<{ departments: Department[] }>().props;
-    console.log(departments);
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Departments" />
