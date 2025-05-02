@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -48,6 +49,20 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->back()->with('success', 'User deleted successfully.');
+    }
+
+    public function assignRoles(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|unique:roles,name',
+            'permissions' => 'array',
+            'permissions.*' => 'string|exists:permissions,name',
+        ]);
+
+        $role = Role::create(['name' => $validated['name']]);
+        $role->syncPermissions($validated['permissions']);
+
+        return redirect()->back()->with('success', 'New role set successfully.');
     }
 
 }

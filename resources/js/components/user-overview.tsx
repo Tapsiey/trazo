@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { formatDateTime, statuses } from '@/lib/utils';
 import { Link, useForm } from '@inertiajs/react';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { FilePlus2 } from 'lucide-react';
 import { FormEvent } from 'react';
 import { DataTable } from './DataTable/data-table';
@@ -11,55 +11,18 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 
+const columnHelper = createColumnHelper<Document>();
+
+const columns: ColumnDef<Document, any>[] = [
+    columnHelper.accessor('title', {
+        header: 'Name',
+        cell: info => info.getValue(),
+    }),
+ 
+];
+
 export default function UserOverView({ documents }: { documents: Document[] }) {
-    const columns: ColumnDef<Document>[] = [
-        {
-            accessorKey: 'title',
-            header: 'Title',
-            cell: ({ row }) => (
-                //@ts-expect-error
-                <Link href={`/documents/${row.original.id}`} className="text-blue-500">
-                    {row.original.title}
-                </Link>
-            ),
-        },
-        {
-            accessorKey: 'file_size',
-            header: 'Size',
-            //@ts-expect-error
-            cell: ({ row }) => <span>{parseFloat(row.original.file_size / 1024).toFixed(2)} KB</span>,
-        },
-        {
-            accessorKey: 'category',
-            header: 'Category',
-            //@ts-expect-error
-            cell: ({ row }) => (
-                <Badge variant={row.getValue('status') === 'submitted' ? 'default' : 'primary'}>{row.original.category.toLowerCase()}</Badge>
-            ),
-        },
-        {
-            accessorKey: 'updated_at',
-            header: 'Uploaded',
-            //@ts-expect-error
-            cell: ({ row }) => formatDateTime(row.original.updated_at),
-        },
-        {
-            accessorKey: 'status',
-            header: 'Status',
-            cell: ({ row }) => {
-                const status = statuses.find((status) => status.value === row.getValue('status'));
-                if (!status) {
-                    return null;
-                }
-                return (
-                    <div className="flex items-center">
-                        {status.icon && <status.icon className="text-muted-foreground mr-2 !size-4" />}
-                        <span>{status.label}</span>
-                    </div>
-                );
-            },
-        },
-    ];
+
 
     return (
         <div className="absolute inset-0 size-full">

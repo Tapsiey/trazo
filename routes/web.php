@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/roles', [UserController::class, 'assignRoles'])->name('roles.store');
 
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments');
 

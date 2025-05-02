@@ -1,3 +1,4 @@
+import NewRoleFrm from '@/actions/new-role';
 import { capitalize, formatDateTime } from '@/lib/utils';
 import { Department, UserResponse } from '@/types';
 import { router } from '@inertiajs/react';
@@ -67,9 +68,7 @@ export default function AdminOverView({ users, roles, departments }: { users: Us
                     Users
                 </h2>
                 <div className="flex space-x-2">
-                    <Button variant="outline">
-                        Add Role
-                    </Button>
+                    <NewRoleFrm />
                     <NewUserFrm roles={roles} departments={departments} />
                 </div>
             </div>
